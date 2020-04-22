@@ -29,8 +29,8 @@ A program which can plot several things:
 - Fractals
 - Functions
 - Chaostheory-simulations
-- etc.
-Zoom with mousewheel, '+' and '-' to switch the plots.
+- etc.  
+  Zoom with mousewheel, '+' and '-' to switch the plots.
 
 ## QuickSort
 A visualization of the QuickSort-algorithm.
