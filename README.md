@@ -18,7 +18,7 @@ This is a simple implementation of a genetic algorithm. The 'blobbs' are trying 
 ## LaufzeitAnalyse
 A little program, demonstrating runtime. Just for demo purposes.
 
-## LucasAmplitudenZaehler
+## LucasAmplitudenzaehler
 A androidapp which increases a counter when there is a high volume sound.
 
 ## Minesweeper
