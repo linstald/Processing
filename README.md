@@ -1,5 +1,5 @@
 # Processing
-This Repo is the Repo of (most of) my [Processing](https://processing.org/) projects.
+This Repo contains (most of) my [Processing](https://processing.org/) projects.
 
 Here is a little Description of all the different projects:
 
