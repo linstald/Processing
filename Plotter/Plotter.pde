@@ -3,10 +3,13 @@ double xmax;
 double ymin;
 double ymax;
 
+double resxmin = -2;
+double resxmax = 2;
+
 final double zoomConst = 0.05;
 
 boolean camera = false;
-
+boolean scale = true;
 /* this array contains Function objects. 
  * They all have a generate() function which can be called
  * to draw the corresponding image
@@ -16,28 +19,26 @@ ArrayList<Function> myFuncs;
 int toPlot;
 
 void setup() {
-  size(1000, 720);
-  //fullScreen(2);
+  size(1000, 720, P2D);
+  //fullScreen(P2D, 2);
   resetWindow();
 
   myFuncs = new ArrayList<Function>();
   myFuncs.add(new Mandelbrot(1000, false)); 
-  myFuncs.add(new Julia(200, -0.39, 0.59, true));
+  myFuncs.add(new Julia(1000, -0.39, 0.59, false));
   myFuncs.add(new Iterator(0.7297297332129355, 3.7));
+  myFuncs.add(new Powertower(100, false));
 
   toPlot = 0; //the Function to be drawn
   myFuncs.get(toPlot).reset();
-
+  frameRate(20);
 }
 
 void draw() {
-  background(255);
   myFuncs.get(toPlot).generate();
-  drawScale();
+  if (scale)drawScale();
+  if (camera)zoomIn(-0.732141, 0.20809941, false);
   drawCoords();
-  if (camera) {
-    zoomIn(-0.732141, 0.20809941, false);
-  }
 }
 
 void mouseWheel(MouseEvent e) {
@@ -54,29 +55,31 @@ void mousePressed() {
   }
 }
 void keyPressed() {
-  if (key=='i') {
-    String name = "image"+hour()+minute()+second()+".png";
+  if (key=='i') { //save image
+    String name = "image"+year()+month()+day()+hour()+minute()+frameCount+".png";
     save(name);
     println("saved "+name);
-  } else if (key=='+') {
+  } else if (key=='+') {//next Function
     toPlot = (toPlot+1)%myFuncs.size();
     myFuncs.get(toPlot).reset();
-  } else if (key=='k') {
+  } else if (key=='k') {//toggle camera
     camera = !camera;
-  } else if (key=='r') {
+  } else if (key=='r') {//reset current Function
     myFuncs.get(toPlot).reset();
-  } else if (key=='w') {
+  } else if (key=='w') {//move up
     ymin+=zoomConst*(ymax-ymin);
     ymax+=zoomConst*(ymax-ymin);
-  } else if (key=='s') {
+  } else if (key=='s') {//move down
     ymin-=zoomConst*(ymax-ymin);
     ymax-=zoomConst*(ymax-ymin);
-  } else if (key=='d') {
+  } else if (key=='d') {//move right
     xmin+=zoomConst*(xmax-xmin);
     xmax+=zoomConst*(xmax-xmin);
-  } else if (key=='a') {
+  } else if (key=='a') {//move left
     xmin-=zoomConst*(xmax-xmin);
     xmax-=zoomConst*(xmax-xmin);
+  } else if (key=='c') {//toggle coordinates
+    scale =!scale;
   }
 }
 
@@ -86,6 +89,7 @@ void drawCoords() {
     double ycor = Map(mouseY, 0, height, ymax, ymin);
     String toText = "("+xcor+" | "+ycor+")";
     text(toText, mouseX, mouseY);
+    println(toText);
   }
 }
 
@@ -112,19 +116,18 @@ void drawScale() {
   }
 }
 
-void setWindow(double xi, double xa, double yi, double ya) {
-  xmin = xi;
-  xmax = xa;
-  ymin = yi;
-  ymax = ya;
+void setWindow(double xi, double xa) {
+  resxmin = xi;
+  resxmax = xa;
+  resetWindow();
 }
 
 void resetWindow() {
   //scale: 1 ^= width/4
-  xmin = -2;
-  xmax = 2;
-  ymin = -(height/2.0)/(width/4.0);
-  ymax = (height/2.0)/(width/4.0);
+  xmin = resxmin;
+  xmax = resxmax;
+  ymin = -(height/2.0)/(width/(resxmax-resxmin));
+  ymax = (height/2.0)/(width/(resxmax-resxmin));
 }
 
 void zoomIn(double x, double y, boolean mouse) {

@@ -121,7 +121,7 @@ class Ball {
         angle *= -1;
       }
       vel.rotate(2*angle);
-      
+      vel.mult(0.99999);
       pos.add(PVector.mult(vel, TIME_UNIT-time));
     }
   }

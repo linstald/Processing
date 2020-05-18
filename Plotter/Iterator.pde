@@ -10,7 +10,7 @@ class Iterator extends Function {
   colorMode(RGB, 255, 255, 255);
  }
  void generate() {
-   
+   background(255);
    double prevy = 0;
    for(int i = 0; i<width; i++) {
      double x=Map(i,0,width, xmin, xmax);
@@ -41,6 +41,7 @@ class Iterator extends Function {
  }
  
  void reset() {
+   setWindow(-1,2);
    iterations=0;
    colorMode(RGB, 255, 255, 255);
  }

@@ -1,5 +1,5 @@
 
-final float TIME_UNIT = 0.5; //trepresents accuracy of animation;draw loop will calculate phyics 1/TIME_UNIT times
+final float TIME_UNIT = 1; //trepresents accuracy of animation;draw loop will calculate phyics 1/TIME_UNIT times
 final float GRAVITY = 0.2;
 
 

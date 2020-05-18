@@ -1,60 +1,55 @@
 class Julia extends Function {
   int iterations;
-  double xinit;
-  double yinit;
-  color[] farben;
+  Complex c;
+  Complex z;
+  color[] colors;
   boolean colormode;
   Julia(int iterations, double x, double y, boolean colormode) {
     this.iterations=iterations;
     this.colormode =colormode;
-    xinit = x;
-    yinit = y;
+    this.c = new Complex(x, y);
+    this.z = new Complex();
     if (colormode) {
-      farben = new color[11];
-      farben [0] = color(#FF0000);
-      farben [1] = color(#FF00C4);
-      farben [2] = color(#B200FF);
-      farben [3] = color(#2D00FF);
-      farben [4] = color(#008EFF);
-      farben [5] = color(#00FFCA);
-      farben [6] = color(#00FF30);
-      farben [7] = color(#C3FF00);
-      farben [8] = color(#FFC800);
-      farben [9] = color(#FF5E00);
-      farben [10] = color(#000000);
+      colors = new color[11];
+      colors [0] = color(#FF0000);
+      colors [1] = color(#FF00C4);
+      colors [2] = color(#B200FF);
+      colors [3] = color(#2D00FF);
+      colors [4] = color(#008EFF);
+      colors [5] = color(#00FFCA);
+      colors [6] = color(#00FF30);
+      colors [7] = color(#C3FF00);
+      colors [8] = color(#FFC800);
+      colors [9] = color(#FF5E00);
+      colors [10] = color(#000000);
     } else {
       colorMode(HSB, iterations, 100, 100);
     }
   }
 
   void generate() {
-    generate(xinit, yinit);
-  }
-
-  void generate(double a, double b) {
     loadPixels();
-    for (int i = 0; i < width; i = i+1) {
-      double x;
-      double y;
-      int farbe;
-      int k;  
-      for (int j = 0; j < height; j = j+1) {
-        x = Map(i, 0, width, xmin, xmax);
-        y = Map(j, 0, height, ymax, ymin);
-        k = 0;
-        while (k<iterations && (x*x + y*y) < 4) {
-          double t = (x*x) - (y*y) + a;
-          y = 2*x*y+b;
-          x = t;
+    for (int j = 0; j < height; j = j+1) {
+      for (int i = 0; i < width; i = i+1) {
+        
+        double a = Map(i, 0, width, xmin, xmax);
+        double b = Map(j, 0, height, ymax, ymin);
+        z.set(a, b);
+        int k = 0;  
+
+        while (k<iterations && z.absSq() < 4) {
+          z.mult(z).add(c);
+          ;
           k++;
         }
+        int col;
         if (colormode) {
           if (k<iterations) {
-            farbe = k%10;
+            col = k%10;
           } else {
-            farbe = 10;
+            col = 10;
           }
-          pixels[i+width*j]=farben[farbe];
+          pixels[i+width*j]=colors[col];
         } else {
           if (k<iterations) {
             pixels[i+width*j]=color(k, 100, 100);
@@ -68,9 +63,10 @@ class Julia extends Function {
   }
 
   void reset() {
-    if(colormode){
+    setWindow(-2,2);
+    if (colormode) {
       colorMode(RGB, 255, 255, 255);
-    }else {
+    } else {
       colorMode(HSB, iterations, 100, 100);
     }
   }

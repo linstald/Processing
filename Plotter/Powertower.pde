@@ -1,15 +1,18 @@
-class Mandelbrot extends Function {
+import java.lang.Math;
+
+class Powertower extends Function {
   int iterations;
   color[] colors;
   boolean colormode;
+  double threshold;
   Complex c;
   Complex z;
-  //Constructor
-  Mandelbrot(int iterations, boolean colormode) {
+  Powertower(int iterations, boolean colormode) {
     this.iterations = iterations;
-    this.colormode = colormode;
+    this.threshold = Math.exp(iterations);
     this.c = new Complex();
     this.z = new Complex();
+    this.colormode = colormode;
     if (colormode) {
       colors = new color[11];
       colors [0] = color(#FF0000);
@@ -27,25 +30,22 @@ class Mandelbrot extends Function {
       colorMode(HSB, iterations, 100, 100);
     }
   }
-  //method to draw set according to iterations and 'colors' array
+
   void generate() {
     loadPixels();
     for (int j = 0; j < height; j = j+1) {
       for (int i = 0; i < width; i = i+1) {
 
-
         double a = Map(i, 0, width, xmin, xmax);
         double b = Map(j, 0, height, ymax, ymin);
         c.set(a, b);
-        z.set(0, 0);
+        z.set(1, 0);
         int k = 0;
 
-        while (k<iterations && z.absSq() < 4) {
-          z.mult(z);
-          z.add(c);
+        while (k<iterations && z.absSq() < threshold) {
+          z = c.pow(c, z);
           k++;
         }
-
         int col;
         if (colormode) {
           if (k<iterations) {
@@ -58,17 +58,15 @@ class Mandelbrot extends Function {
           if (k<iterations) {
             pixels[i+j*width]=color(k, 100, 100);
           } else {
-            pixels[i+j*width]=color(0, 
-              0, 0);
+            pixels[i+j*width]=color(0, 0, 0);
           }
         }
       }
     }
     updatePixels();
   }
-
   void reset() {
-    setWindow(-2, 2);
+    setWindow(-4, 4);
     if (colormode) {
       colorMode(RGB, 255, 255, 255);
     } else {
