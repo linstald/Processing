@@ -68,7 +68,7 @@ class Mandelbrot extends Function {
   }
 
   void reset() {
-    setWindow(-2, 2);
+    setWindow(-2, 2, 0);
     if (colormode) {
       colorMode(RGB, 255, 255, 255);
     } else {

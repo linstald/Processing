@@ -66,7 +66,7 @@ class Powertower extends Function {
     updatePixels();
   }
   void reset() {
-    setWindow(-4, 4);
+    setWindow(-4, 4, 0);
     if (colormode) {
       colorMode(RGB, 255, 255, 255);
     } else {

@@ -1,22 +1,32 @@
+//used to determine the window
 double xmin;
 double xmax;
 double ymin;
 double ymax;
-
+//used to reset the window
 double resxmin = -2;
 double resxmax = 2;
-
+double ym = 0;
+//zoom constant is the rate of zoom by each zoomstep
 final double zoomConst = 0.05;
 
+//some switches
 boolean camera = false;
 boolean scale = true;
+boolean coords = false;
+
 /* this array contains Function objects. 
  * They all have a generate() function which can be called
  * to draw the corresponding image
  */
 ArrayList<Function> myFuncs;
 
-int toPlot;
+//the Function which will be shown
+int toPlot = 0;
+
+//boxZoom variables
+double[] boxZoomStart = new double[4]; //x, y in [0] and [1] mouseX, mouseY in [2] and [3]
+boolean boxZoom = false; //true if currently is zoomed via box
 
 void setup() {
   size(1000, 720, P2D);
@@ -29,7 +39,6 @@ void setup() {
   myFuncs.add(new Iterator(0.7297297332129355, 3.7));
   myFuncs.add(new Powertower(100, false));
 
-  toPlot = 0; //the Function to be drawn
   myFuncs.get(toPlot).reset();
   frameRate(20);
 }
@@ -38,7 +47,8 @@ void draw() {
   myFuncs.get(toPlot).generate();
   if (scale)drawScale();
   if (camera)zoomIn(-0.732141, 0.20809941, false);
-  drawCoords();
+  if (coords)drawCoords();
+  drawboxZoom();
 }
 
 void mouseWheel(MouseEvent e) {
@@ -52,9 +62,30 @@ void mouseWheel(MouseEvent e) {
 void mousePressed() {
   if (mouseButton==RIGHT) {
     resetWindow();
+  } else if (mouseButton==LEFT) { //initialize boxZoom
+    boxZoomStart[0] = Map(mouseX, 0, width, xmin, xmax);
+    boxZoomStart[1] = Map(mouseY, 0, height, ymax, ymin);
+    boxZoomStart[2] = mouseX;
+    boxZoomStart[3] = mouseY;
+    boxZoom =true;
   }
 }
-void keyPressed() {
+void mouseReleased() {
+  if (boxZoom) { //if currently zooming, zoom!
+    boxZoom= false;
+    if(boxZoomStart[2]==mouseX && boxZoomStart[3]==mouseY) { //but only if not just a single click
+      return;
+    }
+    double xit = boxZoomStart[0];
+    double xat = Map(mouseX, 0, width, xmin, xmax);
+    double xi = Math.min(xit, xat);
+    double xa = Math.max(xit, xat);
+    double ymouse = Map(mouseY, 0, height, ymax, ymin);
+    double ym = boxZoomStart[1]+(ymouse-boxZoomStart[1])/2.;
+    setWindowZoom(xi, xa, ym);
+  }
+}
+void keyPressed() { //handling keyboard inputs (with a nice giant if else)
   if (key=='i') { //save image
     String name = "image"+year()+month()+day()+hour()+minute()+frameCount+".png";
     save(name);
@@ -62,8 +93,9 @@ void keyPressed() {
   } else if (key=='+') {//next Function
     toPlot = (toPlot+1)%myFuncs.size();
     myFuncs.get(toPlot).reset();
-  } else if (key=='k') {//toggle camera
-    camera = !camera;
+  } else if (isBetween(key, '0', '9')) { //change Function
+    toPlot=(key%'0')%myFuncs.size();
+    myFuncs.get(toPlot).reset();
   } else if (key=='r') {//reset current Function
     myFuncs.get(toPlot).reset();
   } else if (key=='w') {//move up
@@ -78,11 +110,16 @@ void keyPressed() {
   } else if (key=='a') {//move left
     xmin-=zoomConst*(xmax-xmin);
     xmax-=zoomConst*(xmax-xmin);
-  } else if (key=='c') {//toggle coordinates
+  } else if (key=='k') {//toggle camera
+    camera = !camera;
+  } else if (key=='x') {//toggle scale
     scale =!scale;
-  }
+  } else if (key=='c') {//toggle coordinates
+    coords = !coords;
+  } 
 }
 
+//draws the current coordinates of mouse position
 void drawCoords() {
   if (mousePressed && mouseButton==LEFT) {
     double xcor = Map(mouseX, 0, width, xmin, xmax);
@@ -93,8 +130,9 @@ void drawCoords() {
   }
 }
 
-
+//draws the scale/axes
 void drawScale() {
+  //x axis
   float scaleAbs = width/20;
   float linlen = width/100;
   for (float x =0; x<width; x = x+scaleAbs) {
@@ -104,7 +142,7 @@ void drawScale() {
     fill(0);
     text((float)xcord, x, height-linlen);
   }
-
+  //y axis
   scaleAbs = height/20;
   linlen = height/100;
   for (float y =0; y<height; y = y+scaleAbs) {
@@ -115,72 +153,23 @@ void drawScale() {
     text((float)ycord, linlen, height-y);
   }
 }
-
-void setWindow(double xi, double xa) {
-  resxmin = xi;
-  resxmax = xa;
-  resetWindow();
-}
-
-void resetWindow() {
-  //scale: 1 ^= width/4
-  xmin = resxmin;
-  xmax = resxmax;
-  ymin = -(height/2.0)/(width/(resxmax-resxmin));
-  ymax = (height/2.0)/(width/(resxmax-resxmin));
-}
-
-void zoomIn(double x, double y, boolean mouse) {
-  //detect in which proportion the point lies on the window
-  double w;
-  double h;
-  if (mouse) {
-    w = width;
-    h = height;
-    y= height-y;
-  } else {
-    w=xmax-xmin;
-    h=ymax-ymin;
-    x=x-xmin;
-    y=y-ymin;
+//draws the rectangle for the boxzoom
+void drawboxZoom() {
+  if (boxZoom) {
+    float x1 = (float)boxZoomStart[2];
+    float y1 = (float)boxZoomStart[3];
+    fill(#1C9BFF, 150);
+    stroke(0);
+    strokeWeight(2);
+    rect(x1, y1, mouseX-x1, mouseY-y1);
   }
-  double xfac = x/w;
-  double yfac = y/h;
-  //increase factor = zoomConst*plotterheight/width
-  double xIncr = (xmax-xmin)*zoomConst;
-  double yIncr = (ymax-ymin)*zoomConst;
-  //zoom in: xmin++, xmax--, ymin++, ymax--
-  xmin = xmin + xfac*xIncr;
-  xmax = xmax - (1-xfac)*xIncr;
-  ymin = ymin + yfac*yIncr;
-  ymax = ymax - (1-yfac)*yIncr;
-}
-void zoomOut(double x, double y, boolean mouse) {
-  //detect in which proportion the point lies on the window
-  double w;
-  double h;
-  if (mouse) {
-    w = width;
-    h = height;
-  } else {
-    w=xmax-xmin;
-    h=ymax-ymin;
-    x = x-xmin;
-    y = y-ymin;
-  }
-  double xfac = x/w;
-  double yfac = y/h;
-  //increase factor = zoomConst*windowlength/width
-  double xIncr = (xmax-xmin)*zoomConst;
-  double yIncr = (ymax-ymin)*zoomConst;
-  //zoom out: xmin--, xmax++, ymin--, ymax++
-  //inverse from zoom in, therefore 1-fac->fac, fac->1-fac
-  xmin = xmin - xfac*xIncr;
-  xmax = xmax + (1-xfac)*xIncr;
-  ymin = ymin - (1-yfac)*yIncr;
-  ymax = ymax + yfac*yIncr;
 }
 
+//like map for double
 double Map(double value, double istart, double istop, double ostart, double ostop) {
   return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+}
+//returns if x is in [a,b]
+boolean isBetween(double x, double a, double b) {
+  return a<=x&&x<=b;
 }

@@ -1,8 +1,8 @@
 /**
-*  This class is used to create custom classes which inherit this
-*  Function class, which then have a custom generate() function to
-*  then call this method via polymorphism.
-*/
+ *  This class is used to create custom classes which inherit this
+ *  Function class, which then have a custom generate() function to
+ *  then call this method via polymorphism.
+ */
 
 abstract class Function {
   void generate() {

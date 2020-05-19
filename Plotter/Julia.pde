@@ -31,7 +31,7 @@ class Julia extends Function {
     loadPixels();
     for (int j = 0; j < height; j = j+1) {
       for (int i = 0; i < width; i = i+1) {
-        
+
         double a = Map(i, 0, width, xmin, xmax);
         double b = Map(j, 0, height, ymax, ymin);
         z.set(a, b);
@@ -63,7 +63,7 @@ class Julia extends Function {
   }
 
   void reset() {
-    setWindow(-2,2);
+    setWindow(-2, 2, 0);
     if (colormode) {
       colorMode(RGB, 255, 255, 255);
     } else {
