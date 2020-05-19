@@ -35,6 +35,9 @@ A program which can plot several things:
 ## QuickSort
 A visualization of the QuickSort-algorithm.
 
+## RiemannIntegral
+A visualization of the [Riemann Integral](https://en.wikipedia.org/wiki/Riemann_integral)
+
 ## SierpinskiDreieck
 Simulation of the [Sierpinski-Triangle](https://en.wikipedia.org/wiki/Sierpi%C5%84ski_triangle)
 
