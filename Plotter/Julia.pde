@@ -39,7 +39,6 @@ class Julia extends Function {
 
         while (k<iterations && z.absSq() < 4) {
           z.mult(z).add(c);
-          ;
           k++;
         }
         int col;

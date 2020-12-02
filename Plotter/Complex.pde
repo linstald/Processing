@@ -88,17 +88,57 @@ class Complex {
     return new Complex(w.re*z.re-w.im*z.im, w.re*z.im+w.im*z.re);
   }
   /**
+   *  scales this with t
+   *  (a+bi)*t=ta+tbi
+   *  returns this
+   */
+  Complex scale(double t) {
+    this.im *= t;
+    this.re *= t;
+    return this;
+  }
+  /**
+   *  scales w with t
+   *  (a+bi)*t=ta+tbi
+   *  returns w*t
+   */
+  Complex scale(Complex w, double t) {
+    return new Complex(w.im * t, w.re * t);
+  }
+  /**
+  *  divides this by z
+  *  (a+bi)/(c+di) = (a+bi)*(c-di)/(c^2+d^2)
+  *  returns this
+  */
+  Complex div(Complex z) {
+    return mult(z.conj()).scale(1/z.absSq());
+  }
+  /**
+  *  divides w by z
+  *  (a+bi)/(c+di) = (a+bi)*(c-di)/(c^2+d^2)
+  *  returns new Complex w/z
+  */
+  Complex div(Complex w, Complex z) {
+    return new Complex(w.mult(w, z.conj()).scale(1/z.absSq()));
+  }
+  /**
    *  raises this to the z
    *  (a+bi)^(c+di) = (r*e^(i*phi))^(c+di)=e^((ln(r)*c-phi*d)+i*(ln(r)*d+phi*c))
    *  returns this
    */
   Complex pow(Complex z) {
+    if (this.re==0 && this.re==0) {
+      if (z.im!=0 || z.re!=0) {
+        return new Complex();
+      } else {
+        return new Complex(1, 0);
+      }
+    }
     double r = this.abs();
     double phi = this.arg();
 
     double R = Math.exp(Math.log(r)*z.re-phi*z.im);
     double T = Math.log(r)*z.im+phi*z.re;
-
 
     re = R*Math.cos(T);
     im = R*Math.sin(T);
@@ -109,6 +149,13 @@ class Complex {
    * returns new Complex w^z
    */
   Complex pow(Complex w, Complex z) {
+    if (w.re==0 && w.re==0) {
+      if (z.im!=0 || z.re!=0) {
+        return new Complex();
+      } else {
+        return new Complex(1, 0);
+      }
+    }
     double r = w.abs();
     double phi = w.arg();
 
@@ -127,7 +174,13 @@ class Complex {
     return Math.sqrt(re*re+im*im);
   }
   /**
-   *  absolute values squared of a Complex
+   *  conjugate of a Complex
+   */
+  Complex conj() {
+    return new Complex(re, -im);
+  }
+  /**
+   *  absolute value squared of a Complex
    */
   double absSq() {
     return re*re+im*im;
@@ -137,21 +190,12 @@ class Complex {
    *  i.e. phi in (a+bi)=r*e^(i*phi)
    */
   double arg() {
-    return arctan(im, re);
-  }
-  /**
-   *  arcus tangens extended to [-PI, PI]
-   *  also known as atan2
-   */
-  double arctan(double b, double a) {
-    if (a<0 && b>=0) {
-      return PI-Math.abs(Math.atan(b/a));
-    } else if (a<0 && b<=0) {
-      return -PI+Math.abs(Math.atan(b/a));
-    } else if (a==0) {
-      return b>=0?HALF_PI:-HALF_PI;
-    } else {
-      return Math.atan(b/a);
+    if (re==0) {
+      if (im>=0) {
+        return HALF_PI;
+      }
+      return -HALF_PI;
     }
+    return Math.atan2(im, re);
   }
 }

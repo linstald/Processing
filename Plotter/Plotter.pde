@@ -22,7 +22,7 @@ boolean coords = false;
 ArrayList<Function> myFuncs;
 
 //the Function which will be shown
-int toPlot = 0;
+int toPlot = 4;
 
 //boxZoom variables
 double[] boxZoomStart = new double[4]; //x, y in [0] and [1] mouseX, mouseY in [2] and [3]
@@ -38,6 +38,7 @@ void setup() {
   myFuncs.add(new Julia(1000, -0.39, 0.59, false));
   myFuncs.add(new Iterator(0.7297297332129355, 3.7));
   myFuncs.add(new Powertower(100, false));
+  myFuncs.add(new Test(1000));
 
   myFuncs.get(toPlot).reset();
   frameRate(20);

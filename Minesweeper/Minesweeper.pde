@@ -1,85 +1,110 @@
+import processing.sound.*;
+
 int cols =30;
 int rows;
-int bombs = 40;
+int bombs = 10;
+float fieldWidth;
 int[][] grid;
 /* grid[x][y]
-*       
-*  >= 0 && <10: not opened field
-*  >=10 && <20: marked with a flag (red circle)
-*  >=20 && <30: field is open
-*  
-*  %10=..:      Information about bombs around field
-*  ..0:         0 bombs around, normal field (flood open, when opened)
-*  ..>=1 && <9: amount of bombs around this field
-*  ..==9:       this field is a bomb
-*/
+ *       
+ *  >= 0 && <10: not opened field
+ *  >=10 && <20: marked with a flag (red circle)
+ *  >=20 && <30: field is open
+ *  
+ *  %10=..:      Information about bombs around field
+ *  ..0:         0 bombs around, normal field (flood open, when opened)
+ *  ..>=1 && <9: amount of bombs around this field
+ *  ..==9:       this field is a bomb
+ */
+SoundFile explosion;
+SoundFile click;
+SoundFile flag;
+SoundFile win;
+
 boolean finished;
 int finishTime;
 
 void setup() {
   fullScreen();
   textAlign(CENTER, CENTER);
-  float fieldWidth = width/cols;
+  fieldWidth = width/cols;
   rows = int(height/fieldWidth);
   finished = false;
   grid = new int[cols][rows];
   distributeBombs(bombs);
   countBombs();
   drawGrid();
+  explosion = new SoundFile(this, "explosion.mp3");
+  click = new SoundFile(this, "click.mp3");
+  flag = new SoundFile(this, "flag.mp3");
+  win = new SoundFile(this, "win.mp3");
 }
 
 void draw() {
   if (finished) {
     openGrid();
-    if(mousePressed && (frameCount-finishTime)>5) {
+    if (mousePressed && (frameCount-finishTime)>5) {
       finished = false;
       setup();
     }
   }
   if (!finished && correct()) {
     finished= true;
+    win.play();
     finishTime = frameCount;
   }
 }
 
 void mousePressed() {
   if (!finished) {
-    float fieldWidth = width/cols;
-    int x = int(mouseX/fieldWidth);
-    int y = int(mouseY/fieldWidth);
+    int x = min(cols-1, int(mouseX/fieldWidth));
+    int y = min(rows-1, int(mouseY/fieldWidth));
     if (mouseButton==LEFT) {
       openField(x, y);
+      click.play();
     } else {
-      if (grid[x][y]>=10 && grid[x][y]<20) {
-        grid[x][y]= grid[x][y]-10;
-        fill(140);
-        rect(x*fieldWidth, y*fieldWidth, fieldWidth, fieldWidth);
-      } else if (grid[x][y]<10) {
-        grid[x][y]= grid[x][y]%10+10;
-        fill(255, 0, 0);
-        circle(x*fieldWidth+fieldWidth/2, y*fieldWidth+fieldWidth/2, fieldWidth/3);
-      }
+      flagField(x, y);
+      flag.play();
     }
   }
 }
 
-boolean correct() {
+boolean correct() { //won if and only if all bombs are marked correctly
   boolean result = true;
   for (int x = 0; x<cols; x++) {
     for (int y = 0; y<rows; y++) {
-      result = result && grid[x][y]>=19;
-      if (!result) {
-        return false;
+      if (grid[x][y]%10==9) {
+        result = result && grid[x][y]>=19;
+        if (!result) {
+          return false;
+        }
+      } else {
+        if (grid[x][y]/10%10==1) {
+          return false;
+        }
       }
     }
   }
   return result;
 }
 
+void flagField(int x, int y) {
+  if (grid[x][y]/10%10==1) {
+    grid[x][y]= grid[x][y]-10;
+    fill(140);
+    rect(x*fieldWidth, y*fieldWidth, fieldWidth, fieldWidth);
+  } else if (grid[x][y]<10) {
+    grid[x][y]= grid[x][y]%10+10;
+    fill(255, 0, 0);
+    circle(x*fieldWidth+fieldWidth/2, y*fieldWidth+fieldWidth/2, fieldWidth/3);
+  }
+}
+
 void openField(int x, int y) {
   drawField(x, y);
   grid[x][y] = (grid[x][y]%10)+20;
   if (grid[x][y]%10==9) {
+    explosion.play();
     finished = true;
     finishTime = frameCount;
   } else if (grid[x][y]%10==0) {
@@ -108,7 +133,6 @@ void openGrid() {
 }
 
 void drawField(int x, int y) {
-  float fieldWidth = width/cols;
   fill(200);
   rect(x*fieldWidth, y*fieldWidth, fieldWidth, fieldWidth);
   if (grid[x][y]%10==9) {
@@ -140,7 +164,6 @@ void drawField(int x, int y) {
 
 
 void drawGrid() {
-  float fieldWidth = width/cols;
   for (int x = 0; x<cols; x++) {
     for (int y = 0; y<rows; y++) {
       fill(140);
@@ -159,7 +182,6 @@ void distributeBombs(int amount) {
   int y = int(random(1)*rows);
   if (grid[x][y] == 0) {
     grid[x][y] = 9;
-    float fieldWidth = width/cols;
     fill(255, 255, 0);
     circle(x*fieldWidth+fieldWidth/2, y*fieldWidth+fieldWidth/2, fieldWidth/3);
     distributeBombs(amount-1);

@@ -21,7 +21,8 @@ void draw() {
   println("Empiric: " +area+" | Actual: "+(F(xMax)-F(xMin)));
   drawFunction();
 }
-
+  
+  
 void mousePressed(){
  ArrayList<Interval> copy=new ArrayList<Interval>(intervals);
  intervals.clear();
@@ -63,7 +64,8 @@ void drawFunction() {
     float j = (float)map(y, yMin, yMax, height, 0);
     stroke(255,0,0);
     strokeWeight(4);
-    line(i-1, prev, i, j);
+    fill(0,255,0);
+    line(i-1, prev,i, j); 
     prev=j;
   }
 }

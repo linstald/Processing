@@ -41,8 +41,7 @@ class Mandelbrot extends Function {
         int k = 0;
 
         while (k<iterations && z.absSq() < 4) {
-          z.mult(z);
-          z.add(c);
+          z.mult(z).add(c);
           k++;
         }
 
