@@ -1,7 +1,7 @@
 # Processing
 This Repo contains (most of) my [Processing](https://processing.org/) projects.
 
-Here is a little Description of all the different projects:
+Here is a little description of all the different projects:
 
 ## Forces
 This is a little work-in-progress phsyicsengine. So far you can add Balls (Mousedrag) or new lines (press 's' and then draw a line with the mouse). Press 'c' to clear the lines, 'space' to clear all Balls, and apply forces to the Ball by pressing the arrowkeys.
