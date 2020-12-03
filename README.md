@@ -15,6 +15,9 @@ This project contains some programs, which create famous Fractals:
 ## Generation
 This is a simple implementation of a genetic algorithm. The 'blobbs' are trying to get to the target, where they have to go around the obstacles. Starting with a random method of walking they evolve over time.
 
+## L_Systems
+A Processing sketch (witch some purely java code) drawing the sirpinksi triangle using L-Systems. You can change the rules in VarsLSystem.java and the angle in L_Systems.pde to create an other fractal.
+
 ## LaufzeitAnalyse
 A little program, demonstrating runtime. Just for demo purposes.
 
@@ -23,6 +26,9 @@ A androidapp which increases a counter when there is a high volume sound.
 
 ## Minesweeper
 Classic Minesweeper, without settings.
+
+## PhysikDemo
+A Physics Simulation (colliding Masses)
 
 ## Plotter
 A program which can plot several things:
@@ -34,6 +40,9 @@ A program which can plot several things:
 
 ## QuickSort
 A visualization of the QuickSort-algorithm.
+
+## Relativity
+its a little simulation of the special Relativty (relativity of simultaneity)
 
 ## RiemannIntegral
 A visualization of the [Riemann Integral](https://en.wikipedia.org/wiki/Riemann_integral)
@@ -49,3 +58,6 @@ classic TicTacToe, without any AI.
 
 ## Vulkan
 A little game, where you have to click on the rocks spit out from the vulcano.
+
+## Wurmspiel
+play around with worm mechanics
