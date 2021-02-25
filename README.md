@@ -3,6 +3,10 @@ This Repo contains (most of) my [Processing](https://processing.org/) projects.
 
 Here is a little description of all the different projects:
 
+## DieDistributions
+Demonstrates the distribution of the value of the sum of k die rolls, when repeated n times. k correlates to the vertical position of the mouse, while n is correlating to the horizontal position of the mouse.
+
+
 ## Forces
 This is a little work-in-progress phsyicsengine. So far you can add Balls (Mousedrag) or new lines (press 's' and then draw a line with the mouse). Press 'c' to clear the lines, 'space' to clear all Balls, and apply forces to the Ball by pressing the arrowkeys.
 
@@ -16,7 +20,7 @@ This project contains some programs, which create famous Fractals:
 This is a simple implementation of a genetic algorithm. The 'blobbs' are trying to get to the target, where they have to go around the obstacles. Starting with a random method of walking they evolve over time.
 
 ## L_Systems
-A Processing sketch (witch some purely java code) drawing the sirpinksi triangle using L-Systems. You can change the rules in VarsLSystem.java and the angle in L_Systems.pde to create an other fractal.
+A Processing sketch (with some purely java code) drawing the sirpinksi triangle using L-Systems. You can change the rules in VarsLSystem.java and the angle in L_Systems.pde to create an other fractal.
 
 ## LaufzeitAnalyse
 A little program, demonstrating runtime. Just for demo purposes.
