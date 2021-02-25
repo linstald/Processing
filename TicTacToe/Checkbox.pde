@@ -25,6 +25,7 @@ class Checkbox {
 
   void show() {
     //Rectmode:Corner
+    textAlign(CENTER, CENTER);
     stroke(0);
     if (mouseOver()) {
       fill(180, 180, 180);
@@ -34,9 +35,9 @@ class Checkbox {
     rect(x, y, w, h);
     fill(0);
     if (status) {
-      text(text1, x, y+h/2);
+      text(text1, x+w/2, y+h/2);
     } else {
-      text(text2, x, y+h/2);
+      text(text2, x+w/2, y+h/2);
     }
   }
 }

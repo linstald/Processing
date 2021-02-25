@@ -36,7 +36,7 @@ void setup() {
   myFuncs = new ArrayList<Function>();
   myFuncs.add(new Mandelbrot(1000, false)); 
   myFuncs.add(new Julia(1000, -0.39, 0.59, false));
-  myFuncs.add(new Iterator(0.7297297332129355, 3.7));
+  myFuncs.add(new Iterator(0.7297297332129355, 3.5));
   myFuncs.add(new Powertower(100, false));
   myFuncs.add(new Test(1000));
 

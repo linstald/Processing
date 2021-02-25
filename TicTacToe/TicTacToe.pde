@@ -15,7 +15,7 @@ String[] xturn = {"X ist dran", "X's turn"};
 String[] oturn = {"O ist dran", "O's turn"};
 String[] xwin = {"X hat gewonnen", "X wins"};
 String[] owin = {"O hat gewonnen", "O wins"};
-String[] tie = {"Unentschieden", "Its a tie"};
+String[] tie = {"Unentschieden", "It's a tie"};
 
 void setup() {
   size(600, 700);
@@ -47,11 +47,12 @@ void draw() {
   int langind = b.getStatus()?0:1;
   if (!finished) {
     if (turn==X) {
+      textAlign(CENTER, CENTER);
       fill(0);
-      text(xturn[langind], w, 3*w+buffer);
+      text(xturn[langind], width/2, height-buffer);
     } else {
       fill(0);
-      text(oturn[langind], w, 3*w+buffer);
+      text(oturn[langind], width/2, height-buffer);
     }
   }
   b.show();
@@ -60,15 +61,15 @@ void draw() {
     finished = true;
     if (winner == X) {
       fill(0);
-      text(xwin[langind], w, 650);
+      text(xwin[langind], width/2, height-buffer);
       //println(X);
     } else if (winner == O) {
       fill(0);
-      text(owin[langind], w, 650);
+      text(owin[langind], width/2, height-buffer);
       //println(O);
     } else {
       fill(0);
-      text(tie[langind], w, 650);
+      text(tie[langind], width/2, height-buffer);
       //println(TIE);
     }
   }
