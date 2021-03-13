@@ -63,5 +63,11 @@ classic TicTacToe, without any AI.
 ## Vulkan
 A little game, where you have to click on the rocks spit out from the vulcano.
 
+## Worldmap
+This processing sketch visualizes the average (fixed) broadband bandwidth of each country. The greener a country is filled the higher average bandwidth it has. (As of March 2021)  
+**Sources:**  
+Countryborders (countries.json): https://datahub.io/core/geo-countries  
+Bandwidth (data.json): https://www.speedtest.net/global-index
+
 ## Wurmspiel
 play around with worm mechanics
